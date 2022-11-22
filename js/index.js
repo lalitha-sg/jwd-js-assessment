@@ -121,9 +121,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
   const startTimer = (duration, display) => {
-    var timer = duration,
+    let timer = duration,
       minutes, seconds;
-    var intervalId = setInterval(function () {
+    let intervalId = setInterval(function () {
       minutes = parseInt(timer / 60, 10);
       seconds = parseInt(timer % 60, 10);
 
