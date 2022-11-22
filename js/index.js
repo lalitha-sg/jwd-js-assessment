@@ -24,12 +24,16 @@ window.addEventListener('DOMContentLoaded', () => {
   start.addEventListener('click', function (e) {
     document.querySelector('#quizBlock').style.display = 'block';
     start.style.display = 'none';
+    let minutes = 1;
+    var oneMinute = 60 * minutes,
+      display = document.querySelector('#time');
+    startTimer(oneMinute, display);
+
   });
   // quizArray QUESTIONS & ANSWERS
   // q = QUESTION, o = OPTIONS, a = CORRECT ANSWER
   // Basic ideas from https://code-boxx.com/simple-javascript-quiz/
-  const quizArray = [
-    {
+  const quizArray = [{
       q: 'Which is the third planet from the sun?',
       o: ['Saturn', 'Earth', 'Pluto', 'Mars'],
       a: 1, // array index 1 - so Earth is the correct answer here
@@ -44,6 +48,16 @@ window.addEventListener('DOMContentLoaded', () => {
       o: ['Sydney', 'Canberra', 'Melbourne', 'Perth'],
       a: 1,
     },
+    {
+      q: 'What is string interpolation',
+      o: ['Changing the vlaue of a variable', 'Printing a string to the console', 'Joining multiple strings together using operators like +', 'Using template literals to embed variables into strings'],
+      a: 3,
+    },
+    {
+      q: 'What is string concatenation',
+      o: ['When you assign a string to a variable', 'When you change a variables value', 'When you print a string to the console', 'When you join strings together'],
+      a: 3,
+    }
   ];
 
   // function to Display the quiz questions and answers from the object
@@ -51,6 +65,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const quizWrap = document.querySelector('#quizWrap');
     let quizDisplay = '';
     quizArray.map((quizItem, index) => {
+      
       quizDisplay += `<ul class="list-group">
                    Q - ${quizItem.q}
                     <li class="list-group-item mt-2" id="li_${index}_0"><input type="radio" name="radio${index}" id="radio_${index}_0"> ${quizItem.o[0]}</li>
@@ -60,6 +75,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     </ul>
                     <div>&nbsp;</div>`;
       quizWrap.innerHTML = quizDisplay;
+      
     });
   };
 
@@ -69,22 +85,71 @@ window.addEventListener('DOMContentLoaded', () => {
     quizArray.map((quizItem, index) => {
       for (let i = 0; i < 4; i++) {
         //highlight the li if it is the correct answer
+
         let li = `li_${index}_${i}`;
+
         let r = `radio_${index}_${i}`;
+
         liElement = document.querySelector('#' + li);
         radioElement = document.querySelector('#' + r);
 
         if (quizItem.a == i) {
           //change background color of li element here
+          liElement.style.backgroundColor = '#689f38';
+
+          if (radioElement.checked) {
+            // code for task 1 goes here
+            score++;
+          }
+
         }
 
-        if (radioElement.checked) {
-          // code for task 1 goes here
-        }
       }
+      let totalScore = document.getElementById("score");
+      totalScore.innerHTML = "Your score is " + score + " out of " + quizArray.length;
     });
   };
 
+  const resetForm = () => {
+    // window.open(window.location.href);
+
+    window.location.reload();
+
+    // console.log("RESET FORM " + window.location.click)
+
+  };
+
+
+  const startTimer = (duration, display) => {
+    var timer = duration,
+      minutes, seconds;
+    var intervalId = setInterval(function () {
+      minutes = parseInt(timer / 60, 10);
+      seconds = parseInt(timer % 60, 10);
+
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+
+      display.textContent = minutes + ":" + seconds;
+
+      if (--timer < 0) {
+        clearInterval(intervalId);
+        calculateScore();
+      }
+    }, 1000);
+  }
+
+
   // call the displayQuiz function
   displayQuiz();
+
+  // Create element and add Event Listener for submit button
+  let submitButton = document.getElementById("btnSubmit");
+
+  submitButton.addEventListener('click', calculateScore);
+
+  // Create element and add Event Listener for Reset button 
+  let resetButton = document.getElementById("btnReset");
+
+  resetButton.addEventListener('click', resetForm);
 });
